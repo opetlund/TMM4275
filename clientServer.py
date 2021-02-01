@@ -17,7 +17,7 @@ def parse_parameters(string):
     return params
 
 
-def update_defaults(filename, params):
+def update_defaults(filename, tmp_filename, params):
     # Sets the default values in html file
     file = open(filename)
     data = file.read()
@@ -27,7 +27,7 @@ def update_defaults(filename, params):
         # name="cdepth" value="123456"><br>
         replace = 'name="' + param[0] + '"' + ' value="' + param[1] + '"'
         data = re.sub(find, replace, data)
-    file = open(filename, "wt")
+    file = open(tmp_filename, "wt")
     file.write(data)
     file.close()
 
@@ -66,8 +66,10 @@ class MyHandler(BaseHTTPRequestHandler):
             params = parse_parameters(param_line)
 
             # html interface to show
-            update_defaults("userinterface2.html", params)
-            self.write_HTML_file("userinterface2.html")
+            update_defaults("userinterface.html",
+                            "userinterface_tmp.html",
+                            params)
+            self.write_HTML_file("userinterface_tmp.html")
 
 
 if __name__ == '__main__':
