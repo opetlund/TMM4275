@@ -1,3 +1,5 @@
+***Dette er foreløpig stolen som ble laget i forelesning***
+
 """ DFA Template comes here - My_Chair_template.dfa under “templates” folder"""
 #! NX/KF 4.0
 DefClass: My_Chair_210201 (ug_base_part);
