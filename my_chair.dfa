@@ -1,6 +1,12 @@
 ﻿#! NX/KF 10.0
+ 
+DefClass: My_Chair_210201 (ug_base_part);
+    #Parameters for the chair
+      (number parameter) seat_depth:  <PARAM_DEPTH>;
+      (number parameter) chair_width: <PARAM_WIDTH>;
+      (number parameter) back_height: <PARAM_HEIGHT_BACK>;
+      (number parameter) bar_thickness: <PARAM_THICKNESS>;
 
-DefClass: New_Class_Name (ug_base_part);
 
 (Child) back_left: {
  Class, ug_block; 
