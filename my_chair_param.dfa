@@ -1,0 +1,142 @@
+#! NX/KF 4.0
+ 
+DefClass: My_test_chair (ug_base_part);
+    #Parameters for the chair
+      (number parameter) seat_depth:  150;
+      (number parameter) chair_width: 150;
+      (number parameter) back_height: 150;
+      (number parameter) leg_side: 10;
+      (number parameter) seat_height: 150;
+
+(Child) back_left: {
+ Class, ug_block; 
+ Length, leg_side:; 
+ width, leg_side:; 
+ height, back_height:; 
+ Origin, Point(chair_width:-leg_side:,0,seat_height:+15); 
+ X_Axis, Vector(1,0,0); 
+ Y_Axis, Vector(0,1,0.15); 
+}; 
+
+(Child) back_right: {
+ Class, ug_block; 
+ Length, leg_side:; 
+ width, leg_side:; 
+ height, back_height:; 
+ Origin, Point(0,0,seat_height:+15); 
+ X_Axis, Vector(1,0,0); 
+ Y_Axis, Vector(0,1,0.15); 
+}; 
+
+(Child) leg_cylinder_left: {
+ Class, ug_cylinder; 
+ Diameter, leg_side:/2; 
+ height, seat_depth:-leg_side:*2; 
+ Origin, Point(chair_width:-leg_side:/2,leg_side:,seat_height:/3); 
+ Direction, Vector(0,1,0); 
+}; 
+
+(Child) leg_cylinder_right: {
+ Class, ug_cylinder; 
+ Diameter, leg_side:/2; 
+ height, seat_depth:-leg_side:*2; 
+ Origin, Point(leg_side:/2,leg_side:,seat_height:/3); 
+ Direction, Vector(0,1,0); 
+}; 
+
+(Child) leg_left_back: {
+ Class, ug_block; 
+ Length, leg_side:; 
+ width, leg_side:; 
+ height, seat_height:+20; 
+ Origin, Point(chair_width:-leg_side:,0,0); 
+}; 
+
+(Child) leg_left_front: {
+ Class, ug_block; 
+ Length, leg_side:; 
+ width, leg_side:; 
+ height, seat_height:; 
+ Origin, Point(chair_width:-leg_side:,seat_depth:-leg_side:,0); 
+}; 
+
+(Child) leg_right_back: {
+ Class, ug_block; 
+ Length, leg_side:; 
+ width, leg_side:; 
+ height, seat_height:+20; 
+ Origin, Point(0,0,0); 
+}; 
+
+(Child) leg_right_front: {
+ Class, ug_block; 
+ Length, leg_side:; 
+ width, leg_side:; 
+ height, seat_height:; 
+ Origin, Point(0,seat_depth:-leg_side:,0); 
+}; 
+
+
+(Child) seat: {
+ Class, ug_block; 
+ Length,chair_width:*1.1; 
+ width, seat_depth:*1.05; 
+ height, 10; 
+ Origin, Point(-chair_width:*0.05,0,seat_height:); 
+}; 
+
+(Child) seat_plank_back: {
+ Class, ug_block; 
+ Length, chair_width:-2*leg_side:; 
+ width, leg_side:/2; 
+ height, leg_side:; 
+ Origin, Point(leg_side:,leg_side:/4,seat_height:-leg_side:); 
+}; 
+
+(Child) seat_plank_front: {
+ Class, ug_block; 
+ Length, chair_width:-2*leg_side:; 
+ width, leg_side:/2; 
+ height, leg_side:; 
+ Origin, Point(leg_side:,seat_depth:-3*leg_side:/4,seat_height:-leg_side:); 
+}; 
+
+(Child) seat_plank_left: {
+ Class, ug_block; 
+ Length, leg_side:/4; 
+ width, seat_depth:-2*leg_side:; 
+ height, leg_side:; 
+ Origin, Point(chair_width:-3*leg_side:/4,leg_side:,seat_height:-leg_side:); 
+ X_Axis, Vector(1,0,0); 
+ Y_Axis, Vector(0,1,0); 
+}; 
+
+(Child) seat_plank_right: {
+ Class, ug_block; 
+ Length, leg_side:/4; 
+ width, seat_depth:-2*leg_side:; 
+ height, leg_side:; 
+ Origin, Point(leg_side:/4,leg_side:,seat_height:-leg_side:); 
+ X_Axis, Vector(1,0,0); 
+ Y_Axis, Vector(0,1,0); 
+}; 
+
+(Child) top_rib: {
+ Class, ug_block; 
+ Length, chair_width:-2*leg_side:; 
+ width, leg_side:/2; 
+ height, leg_side:;
+ Origin, Point(leg_side:,-0.15*2*back_height:/3+0.5*leg_side:,seat_height:+2*back_height:/3); 
+ X_Axis, Vector(1,0,0); 
+ Y_Axis, Vector(0,1,0.15); 
+}; 
+
+(Child) lower_rib: {
+ Class, ug_block; 
+ Length, chair_width:-2*leg_side:; 
+ width, leg_side:/2; 
+ height, leg_side:; 
+ X_Axis, Vector(1,0,0); 
+ Origin, Point(leg_side:,-0.15*back_height:/3+0.5*leg_side:,seat_height:+back_height:/3);  
+ Y_Axis, Vector(0,1,0.15); 
+}; 
