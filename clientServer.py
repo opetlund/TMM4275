@@ -146,6 +146,8 @@ class MyHandler(BaseHTTPRequestHandler):
             else:
                 self.write_HTML_file("userinterface_tmp.html")
 
+            # TODO: Give user response that chair is possible to create
+            # TODO: And let user create chair
             if not illegal_value:
                 create_DFA(params, "user_chair.dfa",
                            "my_chair_final_template.dfa")
