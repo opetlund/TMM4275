@@ -14,6 +14,13 @@ variable_range = [
     ['cwidth',  0, 500],
     ['cdepth',  0, 500]
 ]
+variable_range2 = {
+    "seat_depth": [0, 10],
+    "chair_width": [0, 10],
+    "back_height": [0, 10],
+    "leg_side": [0, 10],
+    "seat_height": [0, 10],
+}
 
 # Handler of HTTP requests / responses
 
@@ -92,7 +99,7 @@ class MyHandler(BaseHTTPRequestHandler):
             post_body = self.rfile.read(content_len)
             param_line = post_body.decode()
             params = parse_parameters(param_line)
-            # print(params)
+            print(params)
 
             update_defaults("userinterface.html",
                             "userinterface_tmp.html",
