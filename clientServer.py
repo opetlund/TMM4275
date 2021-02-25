@@ -6,6 +6,9 @@ HOST_NAME = '127.0.0.1'  # locathost - http://127.0.0.1
 PORT_NUMBER = 1234
 # Web servers example: http://www.ntnu.edu:80
 
+pythonPath = "/Users/Hansro/Documents/I&IKT/Vår 2021/Auto 2/Python/"
+dfaPath = "/Users/Hansro/Documents/I&IKT/Vår 2021/Auto 2/TMM4275/templates/"
+
 
 variable_range = {
     "seat_depth": [35, 55],
@@ -25,7 +28,7 @@ variable_to_DFA = {
 
 def create_DFA(params, dfa_filename, dfa_template):
     # Open dfa template
-    file = open(dfa_template)
+    file = open(dfaPath + dfa_template)
     dfa_data = file.read()
     file.close()
 
@@ -50,7 +53,7 @@ def parse_parameters(string):
 
 def update_defaults(filename, tmp_filename, error_filename, params):
     # Sets the default values in html file
-    file = open(filename)
+    file = open(dfaPath + filename)
     data = file.read()
     file.close()
     for param in params:
@@ -102,6 +105,16 @@ class MyHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(bytes("Error. The file " + self.path + " does not exist.", 'utf-8'))
 
+        elif(self.path == '/theproduct.png') != -1:
+            self.send_response(200)
+            self.send_header("Content-type", "image/png")
+            self.end_headers()
+            bReader = open(pythonPath+"theProduct.png", "rb")
+            theImg = bReader.read()
+            print(theImg)
+            self.wfile.write(theImg)            
+
+
     def do_POST(self):
 
         self.send_response(200)
@@ -147,16 +160,27 @@ class MyHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes('var r = confirm("ERROR: The values is wrong!");', 'utf-8'))
                 self.wfile.write(bytes('}', 'utf-8'))
                 self.wfile.write(bytes('</script>', 'utf-8'))
+                self.wfile.write(bytes('</form>', 'utf-8'))
+                self.wfile.write(bytes('</body>', 'utf-8'))
+                self.wfile.write(bytes('</html>', 'utf-8'))
             else:
                 self.write_HTML_file("userinterface_tmp.html")
                 self.wfile.write(bytes('<button onclick="myFunction()">Check values</button>', 'utf-8'))
                 self.wfile.write(bytes('<script>', 'utf-8'))
                 self.wfile.write(bytes('function myFunction() {', 'utf-8'))
                 self.wfile.write(bytes('var txt;', 'utf-8'))
-                self.wfile.write(bytes('var r = confirm("The values is ok!");', 'utf-8'))
+                self.wfile.write(bytes('var r = confirm("The values is OK!");', 'utf-8'))
                 self.wfile.write(bytes('}', 'utf-8'))
                 self.wfile.write(bytes('</script>', 'utf-8'))
                 self.wfile.write(bytes('<button>Create Chair</button>', 'utf-8'))
+                self.wfile.write(bytes('</form>', 'utf-8'))
+                self.wfile.write(bytes('<br>', 'utf-8'))
+                self.wfile.write(bytes('<br>', 'utf-8'))
+                self.wfile.write(bytes('<img src="theProduct.png" alt="The product comes here" width="800" height="420">', 'utf-8'))
+                self.wfile.write(bytes('</body>', 'utf-8'))
+                self.wfile.write(bytes('</html>', 'utf-8'))
+
+                
         
 
 
