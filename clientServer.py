@@ -8,11 +8,11 @@ PORT_NUMBER = 1234
 
 
 variable_range = {
-    "seat_depth": [0, 10],
-    "chair_width": [0, 10],
-    "back_height": [0, 10],
-    "leg_side": [0, 10],
-    "seat_height": [0, 10],
+    "seat_depth": [35, 55],
+    "chair_width": [30, 50],
+    "back_height": [40, 60],
+    "leg_side": [1, 10],
+    "seat_height": [35, 55],
 }
 variable_to_DFA = {
     "seat_depth": "PARAM_SEAT_DEPTH",
@@ -143,8 +143,25 @@ class MyHandler(BaseHTTPRequestHandler):
             # html interface to show
             if illegal_value:
                 self.write_HTML_file("userinterface_error.html")
+                self.wfile.write(bytes('<button onclick="myFunction()">Check values</button>', 'utf-8'))
+                self.wfile.write(bytes('<script>', 'utf-8'))
+                self.wfile.write(bytes('function myFunction() {', 'utf-8'))
+                self.wfile.write(bytes('var txt;', 'utf-8'))
+                self.wfile.write(bytes('var r = confirm("ERROR: The values is wrong!");', 'utf-8'))
+                self.wfile.write(bytes('}', 'utf-8'))
+                self.wfile.write(bytes('</script>', 'utf-8'))
             else:
                 self.write_HTML_file("userinterface_tmp.html")
+                self.wfile.write(bytes('<button onclick="myFunction()">Check values</button>', 'utf-8'))
+                self.wfile.write(bytes('<script>', 'utf-8'))
+                self.wfile.write(bytes('function myFunction() {', 'utf-8'))
+                self.wfile.write(bytes('var txt;', 'utf-8'))
+                self.wfile.write(bytes('var r = confirm("The values is ok!");', 'utf-8'))
+                self.wfile.write(bytes('}', 'utf-8'))
+                self.wfile.write(bytes('</script>', 'utf-8'))
+                self.wfile.write(bytes('<button>Create Chair</button>', 'utf-8'))
+        
+
 
             # TODO: Give user response that chair is possible to create
             # TODO: And let user create chair
