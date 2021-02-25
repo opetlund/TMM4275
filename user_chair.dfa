@@ -3,10 +3,10 @@
 DefClass: My_test_chair (ug_base_part);
     #Parameters for the chair
       (number parameter) seat_depth:  40;
-      (number parameter) chair_width: 40;
-      (number parameter) back_height: 40;
-      (number parameter) leg_side: 5;
-      (number parameter) seat_height: 40;
+      (number parameter) chair_width: 50;
+      (number parameter) back_height: 45;
+      (number parameter) leg_side: 3;
+      (number parameter) seat_height: 45;
 
 (Child) back_left: {
  Class, ug_block; 

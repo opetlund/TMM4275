@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chair UIe</title>
+</head>
+
+
+<body>
+    <h2>Chair UI</h2>
+    <form action="/submitChair" method="post">
+        <label for="back_height">Set back height:</label><br>
+        <input readonly style="background-color:#80FF80;" type="text" id="back_height" name="back_height" value="45"><br><br>
+
+        <label for="leg_side">Set frame thickness:</label><br>
+        <input readonly style="background-color:#80FF80;" type="text" id="leg_side" name="leg_side" value="3"><br><br>
+
+        <label for="chair_width">Set width:</label><br>
+        <input readonly style="background-color:#80FF80;" type="text" id="chair_width" name="chair_width" value="50"><br><br>
+
+        <label for="seat_depth">Set seat depth:</label><br>
+        <input readonly style="background-color:#80FF80;" type="text" id="seat_depth" name="seat_depth" value="40"><br><br>
+
+        <label for="seat_height">Set leg height:</label><br>
+        <input readonly style="background-color:#80FF80;" type="text" id="seat_height" name="seat_height" value="45"><br><br>
+
+        <p>Chair is producible. </p><input type="submit" value="Create chair">
+    </form><p></p><form action="/changeChair" method="post">
+<input type="submit" value="Re-enter values">
+</form>
+</body>
+
+</html>
