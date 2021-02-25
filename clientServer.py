@@ -89,21 +89,18 @@ class MyHandler(BaseHTTPRequestHandler):
 
     # Function for displaying html file
     def write_HTML_file(self, filename):
-        try:
-            file = open(filename).read()
-            self.send_response(200)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-        except:
-            file = "Error. The file " + filename + " does not exist."
-        self.wfile.write(bytes(file, 'utf-8'))
+        self.wfile.write(bytes(open(filename).read(), 'utf-8'))
 
     def do_GET(self):
-        if (self.path == '/') or (self.path.find("/orderChair") != -1):
+        if self.path == '/' or self.path == "/orderChair":
             self.send_response(200)
             self.send_header("Content-type", "text/html")
             self.end_headers()
             self.write_HTML_file("userinterface.html")
+        else:
+            self.send_response(404)
+            self.end_headers()
+            self.wfile.write(bytes("Error. The file " + self.path + " does not exist.", 'utf-8'))
 
     def do_POST(self):
 
