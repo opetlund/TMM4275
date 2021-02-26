@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import re
 from pathlib import Path
 import math
+from producibilityCheck import producibilityCheck
 #import NXopen
 
 HOST_NAME = '127.0.0.1'  # locathost - http://127.0.0.1
@@ -37,47 +38,48 @@ variable_to_DFA = {
 
 
 def reload_nx():
-	theSession  = NXOpen.Session.GetSession()
-	workPart = theSession.Parts.Work
-	displayPart = theSession.Parts.Display
-	
-	workPart.RuleManager.Reload(True)
-	
+    theSession = NXOpen.Session.GetSession()
+    workPart = theSession.Parts.Work
+    displayPart = theSession.Parts.Display
+
+    workPart.RuleManager.Reload(True)
+
+
 def export_nx_img():
-	theSession  = NXOpen.Session.GetSession()
-	workPart = theSession.Parts.Work
-	displayPart = theSession.Parts.Display
-	
-	
-	markId1 = theSession.SetUndoMark(NXOpen.Session.MarkVisibility.Visible, "Start")
-	theUI = NXOpen.UI.GetUI()
-	
-	imageExportBuilder1 = theUI.CreateImageExportBuilder()
-    
-	imageExportBuilder1.RegionMode = False
-    
-	regiontopleftpoint1 = [None] * 2 
-	regiontopleftpoint1[0] = 0
-	regiontopleftpoint1[1] = 0
-	imageExportBuilder1.SetRegionTopLeftPoint(regiontopleftpoint1)
-    
-	imageExportBuilder1.RegionWidth = 1
-    
-	imageExportBuilder1.RegionHeight = 1
-    
-	imageExportBuilder1.FileFormat = NXOpen.Gateway.ImageExportBuilder.FileFormats.Png
-    
-	imageExportBuilder1.FileName = "C:\\Users\\hansro\\Downloads\\TMM4275-main\\theProduct.png"
-    
-	imageExportBuilder1.BackgroundOption = NXOpen.Gateway.ImageExportBuilder.BackgroundOptions.Original
-    
-	imageExportBuilder1.EnhanceEdges = False
-    
-	nXObject1 = imageExportBuilder1.Commit()
-    
-	theSession.DeleteUndoMark(markId1, "Export Image")
-    
-	imageExportBuilder1.Destroy()
+    theSession = NXOpen.Session.GetSession()
+    workPart = theSession.Parts.Work
+    displayPart = theSession.Parts.Display
+
+    markId1 = theSession.SetUndoMark(
+        NXOpen.Session.MarkVisibility.Visible, "Start")
+    theUI = NXOpen.UI.GetUI()
+
+    imageExportBuilder1 = theUI.CreateImageExportBuilder()
+
+    imageExportBuilder1.RegionMode = False
+
+    regiontopleftpoint1 = [None] * 2
+    regiontopleftpoint1[0] = 0
+    regiontopleftpoint1[1] = 0
+    imageExportBuilder1.SetRegionTopLeftPoint(regiontopleftpoint1)
+
+    imageExportBuilder1.RegionWidth = 1
+
+    imageExportBuilder1.RegionHeight = 1
+
+    imageExportBuilder1.FileFormat = NXOpen.Gateway.ImageExportBuilder.FileFormats.Png
+
+    imageExportBuilder1.FileName = "C:\\Users\\hansro\\Downloads\\TMM4275-main\\theProduct.png"
+
+    imageExportBuilder1.BackgroundOption = NXOpen.Gateway.ImageExportBuilder.BackgroundOptions.Original
+
+    imageExportBuilder1.EnhanceEdges = False
+
+    nXObject1 = imageExportBuilder1.Commit()
+
+    theSession.DeleteUndoMark(markId1, "Export Image")
+
+    imageExportBuilder1.Destroy()
 
 
 def create_DFA(params, dfa_filename, dfa_template):
@@ -141,21 +143,36 @@ def lock_and_order(filename):
         file.truncate()
 
 
-def set_error_message(min, max, variable, error_filename):
-      # Sets the default values in html file
+# def set_error_message(min, max, variable, error_filename):
+#       # Sets the default values in html file
+#     file = open(error_filename)
+#     data = file.read()
+#     file.close()
+#     find = 'name="' + variable[0] + '"' + ' value=".*?">'
+#     # name="cdepth" value="123456"><br>
+#     replace = 'style="background-color:#FF0000;" name="' + variable[0] + '"' + ' value="' + \
+#         variable[1] + '">' + \
+#         " Please insert a value between " + \
+#         str(round(min)) + " and " + str(round(max))
+#     data = re.sub(find, replace, data)
+#     file = open(error_filename, "wt")
+#     file.write(data)
+#     file.close()
+
+
+def add_error_messages(error_messages, error_filename):
     file = open(error_filename)
     data = file.read()
     file.close()
-    find = 'name="' + variable[0] + '"' + ' value=".*?">'
-    # name="cdepth" value="123456"><br>
-    replace = 'style="background-color:#FF0000;" name="' + str(variable[0]) + '"' + ' value="' + \
-        variable[1] + '">' + \
-        " Please insert a value between " + \
-        str(round(min)) + " and " + str(round(max))
-    data = re.sub(find, replace, data)
+    for param, message in error_messages.items():
+        find = 'name="' + param + '"' + ' value=".*?">'
+        replace = 'style="background-color:#FF0000;" name="' + param + '"' + ' value="' + \
+            str(round(message[1])) + '">' + message[0]
+        data = re.sub(find, replace, data)
     file = open(error_filename, "wt")
     file.write(data)
     file.close()
+
 
 # Handler of HTTP requests / responses
 
@@ -212,24 +229,14 @@ class MyHandler(BaseHTTPRequestHandler):
                             params)
 
             # Check for illegal parameter
-            illegal_value = False
-
-            for param_pair in params:
-                param = param_pair[0]
-                value = float(param_pair[1])
-                min_value = variable_range[param][0]
-                max_value = variable_range[param][1]
-                if value < min_value or value > max_value:
-                    set_error_message(
-                        min_value,
-                        max_value,
-                        param_pair,
-                        userinterface_error)
-                    illegal_value = True
+            not_producible, error_message = producibilityCheck(params)
 
             # html interface to show
-            if illegal_value:
+            if not_producible:
+                # Add error message to html
+                add_error_messages(error_message, userinterface_error)
                 self.write_HTML_file(userinterface_error)
+
                 # self.wfile.write(
                 #     bytes('<button onclick="myFunction()">Check values</button>', 'utf-8'))
                 # self.wfile.write(bytes('<script>', 'utf-8'))
@@ -264,12 +271,6 @@ class MyHandler(BaseHTTPRequestHandler):
                 # self.wfile.write(bytes('</body>', 'utf-8'))
                 # self.wfile.write(bytes('</html>', 'utf-8'))
 
-            # TODO: Give user response that chair is possible to create
-            # TODO: And let user create chair
-            # if not illegal_value:
-            #     create_DFA(params, "user_chair.dfa",
-            #                dfa_template)
-
         elif self.path.find("/submitChair") != -1:
             # Get the paramters
             content_len = int(self.headers.get('Content-Length'))
@@ -282,7 +283,8 @@ class MyHandler(BaseHTTPRequestHandler):
             self.wfile.write(bytes('<script>', 'utf-8'))
             self.wfile.write(bytes('function myFunction() {', 'utf-8'))
             self.wfile.write(bytes('var txt;', 'utf-8'))
-            self.wfile.write(bytes('var r = confirm("Chair created!");', 'utf-8'))
+            self.wfile.write(
+                bytes('var r = confirm("Chair created!");', 'utf-8'))
             self.wfile.write(bytes('}', 'utf-8'))
             self.wfile.write(bytes('myFunction()', 'utf-8'))
             self.wfile.write(bytes('</script>', 'utf-8'))
