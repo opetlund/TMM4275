@@ -1,6 +1,8 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import re
 from pathlib import Path
+import math
+#import NXopen
 
 HOST_NAME = '127.0.0.1'  # locathost - http://127.0.0.1
 # Maybe set this to 1234 / So, complete address would be: http://127.0.0.1:1234
@@ -32,6 +34,50 @@ variable_to_DFA = {
     "leg_side": "PARAM_FRAME_THICKNESS",
     "seat_height": "PARAM_LEG_HEIGHT",
 }
+
+
+def reload_nx():
+	theSession  = NXOpen.Session.GetSession()
+	workPart = theSession.Parts.Work
+	displayPart = theSession.Parts.Display
+	
+	workPart.RuleManager.Reload(True)
+	
+def export_nx_img():
+	theSession  = NXOpen.Session.GetSession()
+	workPart = theSession.Parts.Work
+	displayPart = theSession.Parts.Display
+	
+	
+	markId1 = theSession.SetUndoMark(NXOpen.Session.MarkVisibility.Visible, "Start")
+	theUI = NXOpen.UI.GetUI()
+	
+	imageExportBuilder1 = theUI.CreateImageExportBuilder()
+    
+	imageExportBuilder1.RegionMode = False
+    
+	regiontopleftpoint1 = [None] * 2 
+	regiontopleftpoint1[0] = 0
+	regiontopleftpoint1[1] = 0
+	imageExportBuilder1.SetRegionTopLeftPoint(regiontopleftpoint1)
+    
+	imageExportBuilder1.RegionWidth = 1
+    
+	imageExportBuilder1.RegionHeight = 1
+    
+	imageExportBuilder1.FileFormat = NXOpen.Gateway.ImageExportBuilder.FileFormats.Png
+    
+	imageExportBuilder1.FileName = "C:\\Users\\hansro\\Downloads\\TMM4275-main\\theProduct.png"
+    
+	imageExportBuilder1.BackgroundOption = NXOpen.Gateway.ImageExportBuilder.BackgroundOptions.Original
+    
+	imageExportBuilder1.EnhanceEdges = False
+    
+	nXObject1 = imageExportBuilder1.Commit()
+    
+	theSession.DeleteUndoMark(markId1, "Export Image")
+    
+	imageExportBuilder1.Destroy()
 
 
 def create_DFA(params, dfa_filename, dfa_template):
@@ -236,11 +282,11 @@ class MyHandler(BaseHTTPRequestHandler):
             self.wfile.write(bytes('<script>', 'utf-8'))
             self.wfile.write(bytes('function myFunction() {', 'utf-8'))
             self.wfile.write(bytes('var txt;', 'utf-8'))
-            self.wfile.write(
-                bytes('var r = confirm("Chair created!");', 'utf-8'))
+            self.wfile.write(bytes('var r = confirm("Chair created!");', 'utf-8'))
             self.wfile.write(bytes('}', 'utf-8'))
             self.wfile.write(bytes('myFunction()', 'utf-8'))
             self.wfile.write(bytes('</script>', 'utf-8'))
+            # self.wfile.write(bytes('<img src="theProduct.png" alt="The product comes here" width="800" height="420">', 'utf-8'))
         elif self.path.find("/changeChair") != -1:
             self.write_HTML_file(userinterface_tmp)
 
