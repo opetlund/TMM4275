@@ -10,9 +10,6 @@ HOST_NAME = '127.0.0.1'  # locathost - http://127.0.0.1
 PORT_NUMBER = 1234
 # Web servers example: http://www.ntnu.edu:80
 
-pythonPath = "/Users/Hansro/Documents/I&IKT/Vår 2021/Auto 2/Python/"
-dfaPath = "/templates/"
-
 # File paths
 dfa_template = Path("templates/chair_template.dfa")
 userinterface_file = Path("templates/userinterface.html")
