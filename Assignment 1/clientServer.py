@@ -18,13 +18,6 @@ userinterface_tmp = Path("tmp/userinterface_tmp.html")
 userinterface_order = Path("tmp/userinterface_order.html")
 image_file = Path("theProduct.png")
 
-variable_range = {
-    "seat_depth": [35, 55],
-    "chair_width": [30, 50],
-    "back_height": [40, 60],
-    "leg_side": [1, 10],
-    "seat_height": [35, 55],
-}
 variable_to_DFA = {
     "seat_depth": "PARAM_SEAT_DEPTH",
     "chair_width": "PARAM_WIDTH",
